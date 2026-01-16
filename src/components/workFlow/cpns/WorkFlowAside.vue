@@ -53,7 +53,7 @@ const workUserTaskHandle = () => {
 };
 
 const workUserTaskHandle2 = () => {
-  const instance = GenerateBaseJobFactory.generateJob(JOB_AUTOMATIC_CONSENT);
+  const instance = GenerateBaseJobFactory.generateJob(JOB_MANUAL_APPROVAL);
 
   console.log("job: =>", instance);
 };

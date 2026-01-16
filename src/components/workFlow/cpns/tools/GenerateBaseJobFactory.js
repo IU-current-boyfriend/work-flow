@@ -28,7 +28,7 @@ class GenerateBaseJobFactory {
   /**
    * 获取任务工厂的映射
    */
-  static getJobFactoryMap(jobMark) {
+  static getJobFactoryMap(jobMark, options) {
     Assert.NonNullAndUndefined(jobMark, "请按照规范选择任务的类型...");
     // 如果不存在工厂,则抛出异常
     if (!this.jobFactoryMap.keys().toArray().includes(jobMark)) {
@@ -37,24 +37,26 @@ class GenerateBaseJobFactory {
     // 获取任务工厂实例对象
     const JobFactoryInstance = this.jobFactoryMap.get(jobMark);
     // 返回工厂实例对象
-    return new JobFactoryInstance();
+    return new JobFactoryInstance(jobMark, options);
   }
 
   /**
    * 根据工厂唯一标记获取工厂
    * @param {*} jobMark
+   * @param {*} options 审批单配置项
    * @returns 返回任务实例对象
    */
-  static getJobFactory(jobMark) {
-    return this.getJobFactoryMap(jobMark);
+  static getJobFactory(jobMark, options) {
+    return this.getJobFactoryMap(jobMark, options);
   }
 
   /**
    * 根据任务工厂的唯一标识,生成对应的任务参数
    * @param {*} jobMark 工厂唯一标识
+   * @param {*} options 审批单配置项
    */
-  static generateJob(jobMark) {
-    return this.getJobFactory(jobMark);
+  static generateJob(jobMark, options) {
+    return this.getJobFactory(jobMark, options);
   }
 }
 

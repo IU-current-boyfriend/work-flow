@@ -60,12 +60,31 @@ const arrayRemoveElement = (arr, index) => {
   return _.remove(arr, (n, i) => i !== index);
 };
 
+/**
+ * 判断该值是否为true or false or undefined
+ */
+const isBooleanAndUndefined = (val) => {
+  if (val === undefined) return true;
+  return _.isBoolean(val);
+};
+
+/**
+ * 判断是否是普通对象
+ * @param {*} val 值
+ * @returns boolean
+ */
+const isPlainObject = (val) => {
+  return _.isPlainObject(val);
+};
+
 export {
   merge,
   isNil,
   getUUID,
   cloneDeep,
   arrayIsEmpty,
+  isPlainObject,
   arrayRemoveElement,
   isIndexOutOfBounds,
+  isBooleanAndUndefined,
 };
