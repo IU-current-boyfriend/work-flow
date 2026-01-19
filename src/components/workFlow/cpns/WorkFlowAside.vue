@@ -3,7 +3,7 @@
     <!-- 任务组件 -->
     <el-row class="element">
       <el-col :span="24">
-        <Work-Task @click="workTaskHandle" />
+        <Work-Task />
       </el-col>
     </el-row>
     <!-- 服务任务组件 -->
@@ -15,47 +15,84 @@
     <!-- 服务任务组件 -->
     <el-row class="element">
       <el-col :span="24">
-        <Work-User-Task @click="workUserTaskHandle2" />
+        <el-radio-group v-model="approvalModel">
+          <el-radio :value="JOB_MANUAL_APPROVAL" size="large"
+            >人工审批</el-radio
+          >
+          <el-radio :value="JOB_AUTOMATIC_CONSENT" size="large"
+            >自动同意</el-radio
+          >
+          <el-radio :value="JOB_AUTOMATIC_REJECT" size="large"
+            >自动拒绝</el-radio
+          >
+        </el-radio-group>
+      </el-col>
+    </el-row>
+
+    <!-- 服务任务组件 -->
+    <el-row class="element">
+      <el-col :span="24">
+        <el-radio-group v-model="approvalHuman">
+          <el-radio :value="APPROVAL_NOMINATOR" size="large">指定人</el-radio>
+          <el-radio :value="APPROVAL_SELF" size="large">发起人自己</el-radio>
+          <el-radio :value="APPROVAL_MANAGER" size="large">主管</el-radio>
+          <el-radio :value="APPROVAL_CANDIDATE" size="large">候选人</el-radio>
+          <el-radio :value="APPROVAL_CANDIDATE_ROLE" size="large"
+            >候选角色</el-radio
+          >
+          <el-radio :value="APPROVAL_ADMIN" size="large">表单管理员</el-radio>
+          <el-radio :value="APPROVAL_FORM_ROLE" size="large">表单角色</el-radio>
+        </el-radio-group>
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script setup>
-import WorkTask from "./WorkTask.vue";
-import WorkUserTask from "./WorkUserTask.vue";
-import GenerateBaseTaskFactory from "./tools/GenerateBaseTaskFactory";
-import GenerateBaseJobFactory from "./tools/GenerateBaseJobFactory";
+import { ref, watch } from "vue";
 import {
   NORMAL_TASK_FACTORY,
   CUSTOMER_TASK_FACTORY,
   JOB_MANUAL_APPROVAL,
   JOB_AUTOMATIC_CONSENT,
   JOB_AUTOMATIC_REJECT,
+  APPROVAL_NOMINATOR,
+  APPROVAL_SELF,
+  APPROVAL_MANAGER,
+  APPROVAL_CANDIDATE,
+  APPROVAL_CANDIDATE_ROLE,
+  APPROVAL_ADMIN,
+  APPROVAL_FORM_ROLE,
 } from "./tools/contant";
+import WorkTask from "./WorkTask.vue";
+import WorkUserTask from "./WorkUserTask.vue";
+import GenerateBaseTaskFactory from "./tools/GenerateBaseTaskFactory";
+import GenerateBaseJobFactory from "./tools/GenerateBaseJobFactory";
 
-const workTaskHandle = () => {
-  const instance = GenerateBaseTaskFactory.generateTask(NORMAL_TASK_FACTORY);
+// 审批类型
+const approvalModel = ref();
 
-  const extension = instance
-    .addExtension()
-    .getExtensionByIndex(0)
-    .setName("aaaa")
-    .setValue(11111)
-    .clear();
+// 审批类型实例对象
+const approvalModelInstance = ref();
 
-  console.log("instance: =>", instance);
-};
+// 审批人
+const approvalHuman = ref();
 
 const workUserTaskHandle = () => {
   const instance = GenerateBaseTaskFactory.generateTask(CUSTOMER_TASK_FACTORY);
-  console.log("user: =>", instance);
-};
-
-const workUserTaskHandle2 = () => {
-  const instance = GenerateBaseJobFactory.generateJob(JOB_MANUAL_APPROVAL);
-
-  console.log("job: =>", instance);
+  console.log("instance: =>", instance);
+  // 监听审批类型,审批类型发生变化
+  watch(approvalModel, (model) => {
+    // 更新任务数据对象
+    instance.setApprovalTask(GenerateBaseJobFactory.generateJob(model));
+    console.log("mode: =>", instance);
+  });
+  // 监听审批人变化
+  watch(approvalHuman, (human) => {
+    // 更新审批人表单数据对象
+    instance.getApprovalTask().setApprovalForm(human);
+    console.log("human: =>>", instance);
+  });
 };
 </script>
 

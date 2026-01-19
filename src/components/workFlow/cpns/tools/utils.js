@@ -77,9 +77,19 @@ const isPlainObject = (val) => {
   return _.isPlainObject(val);
 };
 
+/**
+ * 判断是否是数组
+ * @param {*} val 需要判断的值
+ * @returns boolean
+ */
+const isArray = (val) => {
+  return _.isArray(val);
+};
+
 export {
   merge,
   isNil,
+  isArray,
   getUUID,
   cloneDeep,
   arrayIsEmpty,

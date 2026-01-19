@@ -1,15 +1,51 @@
 import { isNil, isPlainObject } from "./utils";
 import JobBaseApproval from "./JobBaseApproval";
-
+import JobApprovalFormFactory from "./JobApprovalFormFactory";
+/**
+ *  人工审批数据对象
+ */
 class JobManualApproval extends JobBaseApproval {
-  // 审批人0/1/2/3/4/5/6 默认0
-  approvalHuman = 0;
+  /**
+   * 审批表单对象
+   */
+  approvalForm = null;
+
+  /**
+   * 清除表单审批对象
+   */
+  clearApprovalForm() {
+    this.approvalForm = null;
+  }
+
+  /**
+   * 获取审批表单对象
+   * @returns 审批表单对象
+   */
+  getApprovalForm() {
+    return this.approvalForm;
+  }
+
+  /**
+   * 设置审批人表单对象
+   * @param {*} approvalHuman 审批人类型
+   */
+  setApprovalForm(approvalHuman) {
+    if (!isNil(this.approvalForm)) this.clearApprovalForm();
+    // 重新设置表单对象
+    this.initApprovalForm(approvalHuman);
+    // 返回实例对象
+    return this;
+  }
 
   /**
    * 初始化审批单对象
    */
-  initApprovalForm() {
-    console.log("init: =>");
+  initApprovalForm(approvalHuman) {
+    // 实例化审批表单对象
+    this.approvalForm =
+      JobApprovalFormFactory.createApprovalForm(approvalHuman);
+    // 返回实例对象
+    return this;
   }
 
   /**
