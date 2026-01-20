@@ -1,8 +1,13 @@
 import Assert from "./Assert";
+import BaseTask from "./BaseTask";
 import NormalTask from "./NormalTask";
 import CustomerTask from "./CustomerTask";
 import BusinessException from "./BusinessException";
-import { CUSTOMER_TASK_FACTORY, NORMAL_TASK_FACTORY } from "./contant";
+import {
+  CUSTOMER_TASK_FACTORY,
+  NORMAL_TASK_FACTORY,
+  GENERAL_TASK,
+} from "./contant";
 
 /**
  * 该类根据任务类型调用不同的任务参数工厂,生成不同的任务参数
@@ -14,6 +19,7 @@ class GenerateBaseTaskFactory {
    * val: factory Class
    */
   static taskFactoryMap = new Map([
+    [GENERAL_TASK, BaseTask],
     [NORMAL_TASK_FACTORY, NormalTask],
     [CUSTOMER_TASK_FACTORY, CustomerTask],
   ]);

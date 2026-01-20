@@ -21,7 +21,7 @@ const isUpdating = ref(false); // 防重复更新锁：避免并发调用导致�
 const graphCanvasProps = defineProps({
   graphInstanceProps: {
     type: Object,
-    default: () => ({}),
+    default: () => ref({}),
     // 画布的属性
     width: Number,
     height: Number,
@@ -60,6 +60,8 @@ const getDefaultGraphConfig = () => {
   return {
     // 画布网格配置项
     grid: defaultGrid,
+    // 自动缩放
+    autoResize: true,
     // 默认画布颜色
     background: {
       color: "#F2F7FA",
@@ -106,7 +108,7 @@ const createGraph = () => {
 };
 
 // 初始化容器
-const initGraph = (option = {}) => {
+const initGraph = (option = null) => {
   if (isUpdating.value) return; // 防重复执行
   isUpdating.value = true;
   try {
@@ -124,9 +126,24 @@ onMounted(async () => {
   initGraph();
 });
 
+/**
+ * 外界传递配置项：
+ * graphCanvasProps.graphInstanceProps
+ *      => watch只能监听graphInstanceProps对象属性变化
+ *      => graphCanvasProps 整体改变的时候监听不到
+ *      => 所以外界只能局部改变属性，不能整体改变
+ * => 本质在于：
+ *    watch(graphCanvasProps.graphInstanceProps)监听的是graphInstanceProps对象变化,内部属性
+ *    如果是graphInstanceProps整体发生变化
+ *    watch(graphCanvasProps) 即可，因为graphCanvasProps内部属性发生了变化
+ *    也可以使用watch中的getter函数处理graphInstanceProps属性的变化
+ *
+ *
+ */
 // 监听画布的属性变化,change -> update -> option
 // 实际上这种思路有问题,在设计的时候,antv提供了api去修改画布、网格等配置的接口
-// 在设计的原型图的时候,不应该整体更新画布的配置,应该局部修改
+// 在设计的原型图的时候,不应该整体更新画布的配置,应该局部修改, 整体修改使用watch getter and deep处理
+// 既实现整体修改又实现局部修改
 watch(graphCanvasProps.graphInstanceProps, (newVal) => {
   initGraph(newVal);
 });

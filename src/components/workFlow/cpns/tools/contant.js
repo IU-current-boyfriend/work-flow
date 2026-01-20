@@ -2,6 +2,7 @@ const PROCESS = "Process_";
 const PROCESS_NAME = "业务流程_";
 const ACTIVITY = "Activity_";
 const SERIALNUMBER_KEY = "serialNumber";
+const GENERAL_TASK = "general_task_factory";
 const NORMAL_TASK_FACTORY = "normal_task_factory";
 const CUSTOMER_TASK_FACTORY = "customer_task_factory";
 const JOB_MANUAL_APPROVAL = "job_manual_approval";
@@ -56,6 +57,7 @@ export {
   JOB_AUTOMATIC_CONSENT,
   JOB_AUTOMATIC_REJECT,
   NORMAL_TASK_FACTORY,
+  GENERAL_TASK,
   INDEX_OUT_OF_BOUNDS,
   INVALID_MONITOR_FIELD,
   INVALID_MONITOR_NUMBER,

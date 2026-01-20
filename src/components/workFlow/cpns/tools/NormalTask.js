@@ -10,7 +10,6 @@ class NormalTask extends BaseTask {
   general = {
     id: undefined,
     name: undefined,
-    mark: undefined,
   };
 
   // 抄送提醒

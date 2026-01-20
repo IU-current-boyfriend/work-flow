@@ -69,6 +69,15 @@ const isBooleanAndUndefined = (val) => {
 };
 
 /**
+ * 判断是否是对象
+ * @param {*} val 值
+ * @returns boolean
+ */
+const isObject = (val) => {
+  return _.isObject(val);
+};
+
+/**
  * 判断是否是普通对象
  * @param {*} val 值
  * @returns boolean
@@ -86,12 +95,51 @@ const isArray = (val) => {
   return _.isArray(val);
 };
 
+/**
+ * 返回对象本身可枚举的属性
+ * @param {*} origin 源对象
+ * @returns 自身可枚举属性集合
+ */
+const forOwn = (origin) => {
+  if (!isObject(origin)) return null;
+  // 创建属性集合
+  const properties = [];
+  _.forOwn(origin, (v, k) => {
+    properties.push(k);
+  });
+  return properties;
+};
+
+/**
+ * 源数组根据目标顺序进行重排
+ * @param {*} t 目标顺序
+ * @param {*} o 原数组
+ * @returns 排序后的数组
+ */
+const unionSort = (t, o) => {
+  // 如果二者其一不是数组，则返回原数组
+  if (!isArray(t) || !isArray(o)) return o;
+  // 根据正确的顺序,设置顺序
+  const reduceO = o.reduce((r, c) => {
+    const index = t.findIndex((v) => v === c);
+    if (index != -1) r[c] = index;
+    else r[c] = Infinity;
+    return r;
+  }, {});
+  // 按照正确的顺序升序
+  return Object.entries(reduceO)
+    .sort(([k1, v1], [k2, v2]) => v1 - v2)
+    .map(([k]) => k);
+};
+
 export {
   merge,
   isNil,
+  forOwn,
   isArray,
   getUUID,
   cloneDeep,
+  unionSort,
   arrayIsEmpty,
   isPlainObject,
   arrayRemoveElement,

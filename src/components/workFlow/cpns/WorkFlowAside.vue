@@ -3,7 +3,7 @@
     <!-- 任务组件 -->
     <el-row class="element">
       <el-col :span="24">
-        <Work-Task />
+        <Work-Task @click="workTaskHandle" />
       </el-col>
     </el-row>
     <!-- 服务任务组件 -->
@@ -69,6 +69,9 @@ import WorkUserTask from "./WorkUserTask.vue";
 import GenerateBaseTaskFactory from "./tools/GenerateBaseTaskFactory";
 import GenerateBaseJobFactory from "./tools/GenerateBaseJobFactory";
 
+// 自定义事件类型
+const emits = defineEmits(["update:clickTaskHandle"]);
+
 // 审批类型
 const approvalModel = ref();
 
@@ -78,21 +81,24 @@ const approvalModelInstance = ref();
 // 审批人
 const approvalHuman = ref();
 
+const workTaskHandle = () => {
+  const instance = GenerateBaseTaskFactory.generateTask(NORMAL_TASK_FACTORY);
+  emits("update:clickTaskHandle", instance);
+};
+
 const workUserTaskHandle = () => {
   const instance = GenerateBaseTaskFactory.generateTask(CUSTOMER_TASK_FACTORY);
-  console.log("instance: =>", instance);
   // 监听审批类型,审批类型发生变化
   watch(approvalModel, (model) => {
     // 更新任务数据对象
     instance.setApprovalTask(GenerateBaseJobFactory.generateJob(model));
-    console.log("mode: =>", instance);
   });
   // 监听审批人变化
   watch(approvalHuman, (human) => {
     // 更新审批人表单数据对象
     instance.getApprovalTask().setApprovalForm(human);
-    console.log("human: =>>", instance);
   });
+  emits("update:clickTaskHandle", instance);
 };
 </script>
 
