@@ -62,7 +62,7 @@ class CustomerTask extends BaseTask {
     if (!isNil(aprrovalTask)) this.clearApprovalTask();
     // 设置非法的审批任务实例对象
     if (!(aprrovalTask instanceof JobBaseApproval)) {
-      BusinessException.invalidApprovalTask("customerTask class");
+      BusinessException.invalidApprovalTask(this.name);
       return;
     }
     this.approvalTask = aprrovalTask;

@@ -19,7 +19,9 @@ const INVALID_APPROVAL_HUMAN = "非法的审批人:";
 const INVALID_APPROVAL_MODE = "非法的审批方式:";
 const INVALID_NO_APPROVAL_HUAMN = "非法的审批人为空:";
 const INVALID_APPROVAL_TASK = "非法的审批任务实例对象:";
-
+const INVALID_INSTANCE_OBJ = "无效形式的动态对象...";
+const INVALID_INSTANCE_CONFIG_OBJ = "无效形式的动态配置对象";
+const INVALID_TASK_INSTANCE = "无效的任务实例对象...";
 const INVALID_OPERATION_METHOD = "实例对象该方法已被重写,不具备该功能...:";
 
 // 制定人
@@ -81,4 +83,7 @@ export {
   NO_APPROVAL_APPOINT,
   INVALID_OPERATION_METHOD,
   INVALID_APPROVAL_TASK,
+  INVALID_INSTANCE_OBJ,
+  INVALID_TASK_INSTANCE,
+  INVALID_INSTANCE_CONFIG_OBJ,
 };

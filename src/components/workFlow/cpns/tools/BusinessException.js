@@ -11,6 +11,7 @@ import {
   INVALID_NO_APPROVAL_HUAMN,
   INVALID_OPERATION_METHOD,
   INVALID_APPROVAL_TASK,
+  INVALID_TASK_INSTANCE,
 } from "./contant";
 class BusinessException {
   /**
@@ -83,6 +84,10 @@ class BusinessException {
 
   static invalidApprovalTask(clazz) {
     console.warn(`${clazz}${INVALID_APPROVAL_TASK}`);
+  }
+
+  static invalidTaskInstance(clazz) {
+    throw new Error(`${clazz}${INVALID_TASK_INSTANCE}`);
   }
 }
 

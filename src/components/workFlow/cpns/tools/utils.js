@@ -121,11 +121,14 @@ const unionSort = (t, o) => {
   if (!isArray(t) || !isArray(o)) return o;
   // 根据正确的顺序,设置顺序
   const reduceO = o.reduce((r, c) => {
-    const index = t.findIndex((v) => v === c);
+    const index = t.findIndex(
+      (v) => v.toLocaleUpperCase() === c.toLocaleUpperCase()
+    );
     if (index != -1) r[c] = index;
     else r[c] = Infinity;
     return r;
   }, {});
+
   // 按照正确的顺序升序
   return Object.entries(reduceO)
     .sort(([k1, v1], [k2, v2]) => v1 - v2)

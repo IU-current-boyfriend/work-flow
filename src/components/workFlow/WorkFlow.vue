@@ -2,13 +2,19 @@
   <div class="work-flow-cell">
     <el-container class="cell-container">
       <el-aside class="cell-aside">
-        <Work-Flow-Aside @update:clickTaskHandle="clickTaskHandle" />
+        <WorkFlowAside @update:clickTaskHandle="clickTaskHandle" />
       </el-aside>
       <el-main class="cell-main">
-        <Work-Flow-Cell />
+        <WorkFlowCell />
       </el-main>
-      <el-aside class="cell-aside-option" :width="asideWidth">
-        <Work-Flow-Option-Aside :instance="propsInstance" />
+      <el-aside
+        class="cell-aside-option"
+        :width="isCollapse ? '320px' : '160px'"
+      >
+        <WorkFlowOptionAside
+          :instance="propsInstance"
+          @update:changeCollapseHandle="changeCollapseHandle"
+        />
       </el-aside>
     </el-container>
   </div>
@@ -22,9 +28,15 @@ import WorkFlowAside from "./cpns/WorkFlowAside.vue";
 import WorkFlowOptionAside from "./cpns/WorkFlowOptionAside.vue";
 import GenerateBaseTaskFactory from "./cpns/tools/GenerateBaseTaskFactory";
 
-const asideWidth = ref("150px");
-
+const isCollapse = ref(false); // 侧边栏是否伸缩
 const propsInstance = ref(GenerateBaseTaskFactory.generateTask(GENERAL_TASK));
+
+/**
+ * 是否伸缩
+ */
+const changeCollapseHandle = (collapse) => {
+  isCollapse.value = collapse;
+};
 
 const clickTaskHandle = (instance) => {
   // 整体更新实例对象,业务需求
@@ -54,6 +66,7 @@ const clickTaskHandle = (instance) => {
 }
 
 .cell-aside-option {
+  padding: 20px;
   box-sizing: border-box;
   border-left: 1px solid #eee;
   max-height: 100%;
