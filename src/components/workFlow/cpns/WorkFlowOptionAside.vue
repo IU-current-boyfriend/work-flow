@@ -133,7 +133,7 @@ const initCollapseActive = () => {
 onMounted(() => {
   // 初始化视图
   initViewModel(propsInstance.instance);
-  // 重置伸缩组件当前激活的状态
+  // 初始化组件的状态
   initCollapseActive();
 });
 
@@ -150,7 +150,7 @@ watch(
   (newPropsInstance) => {
     // 获取到修改后的属性实例对象,渲染视图
     initViewModel(newPropsInstance);
-    // 重置伸缩组件当前激活的状态
+    // 初始化组件状态
     initCollapseActive();
   }
 );

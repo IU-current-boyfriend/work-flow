@@ -135,6 +135,13 @@ const unionSort = (t, o) => {
     .map(([k]) => k);
 };
 
+/**
+ * 判断是否为空字符串
+ * @param {*} str 字符串
+ * @returns boolean
+ */
+const isEmptyString = (str) => _.isEqual(str, "");
+
 export {
   merge,
   isNil,
@@ -144,6 +151,7 @@ export {
   cloneDeep,
   unionSort,
   arrayIsEmpty,
+  isEmptyString,
   isPlainObject,
   arrayRemoveElement,
   isIndexOutOfBounds,

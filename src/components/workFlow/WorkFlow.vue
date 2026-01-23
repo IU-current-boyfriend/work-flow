@@ -7,10 +7,7 @@
       <el-main class="cell-main">
         <WorkFlowCell />
       </el-main>
-      <el-aside
-        class="cell-aside-option"
-        :width="isCollapse ? '320px' : '160px'"
-      >
+      <el-aside class="cell-aside-option" :width="collapseWidth">
         <WorkFlowOptionAside
           :instance="propsInstance"
           @update:changeCollapseHandle="changeCollapseHandle"
@@ -21,26 +18,42 @@
 </template>
 
 <script setup>
-import { provide, ref, watch } from "vue";
+import { provide, ref, watch, nextTick } from "vue";
 import { GENERAL_TASK } from "./cpns/tools/contant";
 import WorkFlowCell from "./cpns/WorkFlowCell.vue";
 import WorkFlowAside from "./cpns/WorkFlowAside.vue";
 import WorkFlowOptionAside from "./cpns/WorkFlowOptionAside.vue";
 import GenerateBaseTaskFactory from "./cpns/tools/GenerateBaseTaskFactory";
 
-const isCollapse = ref(false); // 侧边栏是否伸缩
+const collapseWidth = ref("160px"); // 160 -> 451
 const propsInstance = ref(GenerateBaseTaskFactory.generateTask(GENERAL_TASK));
+
+// 提供给弹窗子组件弹窗使用
+provide("collapseWidth", collapseWidth);
+
+/**
+ * 设置伸缩框宽度
+ */
+const changeCollapseWidth = (width) => {
+  collapseWidth.value = width;
+};
 
 /**
  * 是否伸缩
  */
 const changeCollapseHandle = (collapse) => {
-  isCollapse.value = collapse;
+  collapse
+    ? changeCollapseWidth("451px")
+    : setTimeout(() => {
+        changeCollapseWidth("160px");
+      }, 300);
 };
 
 const clickTaskHandle = (instance) => {
   // 整体更新实例对象,业务需求
   propsInstance.value = instance;
+  // 设置伸缩框
+  changeCollapseHandle(false);
 };
 </script>
 
