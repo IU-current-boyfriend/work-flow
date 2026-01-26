@@ -1,8 +1,6 @@
-import { ACTIVITY, JOB_MANUAL_APPROVAL } from "./contant";
+import * as CONTANT from "./contant";
 import { getUUID, cloneDeep, isNil } from "./utils";
 import BaseTask from "./BaseTask";
-import JobBaseApproval from "./JobBaseApproval";
-import GenerateBaseJobFactory from "./GenerateBaseJobFactory";
 import BusinessException from "./BusinessException";
 
 class CustomerTask extends BaseTask {
@@ -12,14 +10,14 @@ class CustomerTask extends BaseTask {
     name: undefined,
   };
 
-  // 任务数据实例对象
-  approvalTask = null;
-
   // 抄送提醒
   notation = {
     start: null, // 抄送开始的索引数组（树型结构）
     end: null, // 抄送结束的索引数组（树型结构）
   };
+
+  // 审批任务
+  approvalTask = {};
 
   /**
    * 设置抄送信息
@@ -60,24 +58,16 @@ class CustomerTask extends BaseTask {
 
   setApprovalTask(aprrovalTask) {
     if (!isNil(aprrovalTask)) this.clearApprovalTask();
-    // 设置非法的审批任务实例对象
-    if (!(aprrovalTask instanceof JobBaseApproval)) {
-      BusinessException.invalidApprovalTask(this.name);
-      return;
-    }
     this.approvalTask = aprrovalTask;
   }
 
   initGeneral() {
     // 初始化普通任务的id值
-    this.setGeneral("id", `${ACTIVITY}${getUUID()}`);
+    this.setGeneral("id", `${CONTANT.ACTIVITY}${getUUID()}`);
   }
 
   init() {
     this.initGeneral();
-    this.setApprovalTask(
-      GenerateBaseJobFactory.generateJob(JOB_MANUAL_APPROVAL)
-    );
   }
 
   // 构造方法

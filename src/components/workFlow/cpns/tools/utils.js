@@ -142,7 +142,30 @@ const unionSort = (t, o) => {
  */
 const isEmptyString = (str) => _.isEqual(str, "");
 
+/**
+ * 获取对象自身可枚举的键名集合
+ * @param {*} val
+ * @returns
+ */
+const keys = (val, collect = []) => {
+  _.toPairs(val).forEach(([k, v]) => {
+    if (isObject(v)) keys(v, collect);
+    else collect.push(k);
+  });
+  return collect;
+};
+
+/**
+ * 判断是否为函数
+ * @param {*} val
+ * @returns
+ */
+const isFunction = (val) => {
+  return _.isFunction(val);
+};
+
 export {
+  keys,
   merge,
   isNil,
   forOwn,
@@ -150,6 +173,7 @@ export {
   getUUID,
   cloneDeep,
   unionSort,
+  isFunction,
   arrayIsEmpty,
   isEmptyString,
   isPlainObject,

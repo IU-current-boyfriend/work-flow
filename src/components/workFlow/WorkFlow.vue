@@ -11,6 +11,7 @@
         <WorkFlowOptionAside
           :instance="propsInstance"
           @update:changeCollapseHandle="changeCollapseHandle"
+          @update:approvalTask="updateApprovalTask"
         />
       </el-aside>
     </el-container>
@@ -19,14 +20,16 @@
 
 <script setup>
 import { provide, ref, watch, nextTick } from "vue";
-import { GENERAL_TASK } from "./cpns/tools/contant";
+import * as CONTANT from "./cpns/tools/contant";
 import WorkFlowCell from "./cpns/WorkFlowCell.vue";
 import WorkFlowAside from "./cpns/WorkFlowAside.vue";
 import WorkFlowOptionAside from "./cpns/WorkFlowOptionAside.vue";
 import GenerateBaseTaskFactory from "./cpns/tools/GenerateBaseTaskFactory";
 
 const collapseWidth = ref("160px"); // 160 -> 451
-const propsInstance = ref(GenerateBaseTaskFactory.generateTask(GENERAL_TASK));
+const propsInstance = ref(
+  GenerateBaseTaskFactory.generateTask(CONTANT.GENERAL_TASK)
+);
 
 // 提供给弹窗子组件弹窗使用
 provide("collapseWidth", collapseWidth);
@@ -49,11 +52,17 @@ const changeCollapseHandle = (collapse) => {
       }, 300);
 };
 
+const updateApprovalTask = (approvalTask) => {
+  console.log("可以绑定任务中的formData数据...");
+};
+
 const clickTaskHandle = (instance) => {
   // 整体更新实例对象,业务需求
   propsInstance.value = instance;
   // 设置伸缩框
   changeCollapseHandle(false);
+
+  console.log("instance: =>", instance);
 };
 </script>
 

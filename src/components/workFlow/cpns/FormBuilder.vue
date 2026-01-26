@@ -1,7 +1,7 @@
 <template>
   <el-form
     ref="formInstance"
-    label-width="60px"
+    :label-width="formLabelWidth"
     :model="formData"
     :rules="formRules"
   >
@@ -12,20 +12,17 @@
       :prop="formItem.name"
       label-position="right"
     >
-      <!-- 动态组件 -->
       <component
         :is="acquireType(formItem.type)"
         v-model="formData[formItem.name]"
         v-bind="formItem.props"
       >
-        <!-- 插槽 -->
         <template
           v-for="slot of acquireSlots(formItem.slots)"
           :key="slot"
           #[slot]
         >
-          <!-- 插槽内容 -->
-          <component :is="formItem.slots[slot]" />
+          <component :is="formItem.slots[slot]"></component>
         </template>
       </component>
     </el-form-item>
@@ -34,7 +31,7 @@
 
 <script setup>
 import { computed, useTemplateRef } from "vue";
-import { isNil } from "./tools/utils";
+import { isNil, isFunction } from "./tools/utils";
 
 // 创建form表单对象ref对象
 const formInstance = useTemplateRef("formInstance");
@@ -45,6 +42,10 @@ const formData = defineModel();
 const formProps = defineProps({
   formRules: Object,
   formItems: Array,
+  formLabelWidth: {
+    type: String,
+    default: "60px",
+  },
 });
 
 /**

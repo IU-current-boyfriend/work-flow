@@ -1,5 +1,5 @@
 import BaseTask from "./BaseTask";
-import { ACTIVITY } from "./contant";
+import * as CONTANT from "./contant";
 import { isNil, getUUID, cloneDeep } from "./utils";
 
 /**
@@ -46,7 +46,7 @@ class NormalTask extends BaseTask {
 
   initGeneral() {
     // 初始化普通任务的id值
-    this.setGeneral("id", `${ACTIVITY}${getUUID()}`);
+    this.setGeneral("id", `${CONTANT.ACTIVITY}${getUUID()}`);
   }
 
   init() {

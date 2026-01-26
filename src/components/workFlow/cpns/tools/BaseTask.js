@@ -10,7 +10,7 @@ import {
   arrayRemoveElement,
   isIndexOutOfBounds,
 } from "./utils";
-import { PROCESS, PROCESS_NAME } from "./contant";
+import * as CONTANT from "./contant";
 import Assert from "./Assert";
 import Actuator from "./Actuator";
 import Extension from "./Extension";
@@ -204,9 +204,9 @@ class BaseTask {
     // 生成唯一UUID
     const uuid = getUUID();
     // 设置id、name
-    this.setGeneral("id", `${PROCESS}${uuid}`).setGeneral(
+    this.setGeneral("id", `${CONTANT.PROCESS}${uuid}`).setGeneral(
       "name",
-      `${PROCESS_NAME}${uuid}`
+      `${CONTANT.PROCESS_NAME}${uuid}`
     );
   }
 

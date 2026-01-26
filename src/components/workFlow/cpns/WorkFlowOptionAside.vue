@@ -13,7 +13,11 @@
           </div>
         </template>
         <!--  动态组件 -->
-        <component :is="approval.name" :approval="params" />
+        <component
+          :is="approval.name"
+          :approval="params"
+          @update:approvalTask="updateApprovalTask"
+        />
       </el-collapse-item>
     </el-collapse>
   </div>
@@ -69,7 +73,10 @@ const propsInstance = defineProps({
 });
 
 // 自定义事件
-const emits = defineEmits(["update:changeCollapseHandle"]);
+const emits = defineEmits([
+  "update:approvalTask",
+  "update:changeCollapseHandle",
+]);
 
 // 定义动态组件名和配置项映射
 const approvals = ref(null);
@@ -130,17 +137,21 @@ const initCollapseActive = () => {
   collapseActive.value = [];
 };
 
+// 伸缩组件状态变化
+const changeCollapseHandle = (val) => {
+  emits("update:changeCollapseHandle", arrayIsEmpty(val) ? false : true);
+};
+
+const updateApprovalTask = (approvalTask) => {
+  emits("update:approvalTask", approvalTask);
+};
+
 onMounted(() => {
   // 初始化视图
   initViewModel(propsInstance.instance);
   // 初始化组件的状态
   initCollapseActive();
 });
-
-// 伸缩组件状态变化
-const changeCollapseHandle = (val) => {
-  emits("update:changeCollapseHandle", arrayIsEmpty(val) ? false : true);
-};
 
 /**
  * 不支持局部修改，整体修改符合业务逻辑
