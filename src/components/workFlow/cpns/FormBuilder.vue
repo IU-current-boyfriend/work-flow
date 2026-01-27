@@ -77,8 +77,8 @@ defineExpose({
   validate: (...args) => {
     return formInstance.value.validate(...args);
   },
-  resetField: () => {
-    return formInstance.value.resetField();
+  resetFields: () => {
+    return formInstance.value.resetFields();
   },
 });
 </script>

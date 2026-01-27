@@ -26,7 +26,7 @@ import WorkFlowAside from "./cpns/WorkFlowAside.vue";
 import WorkFlowOptionAside from "./cpns/WorkFlowOptionAside.vue";
 import GenerateBaseTaskFactory from "./cpns/tools/GenerateBaseTaskFactory";
 
-const collapseWidth = ref("160px"); // 160 -> 451
+const collapseWidth = ref("20%");
 const propsInstance = ref(
   GenerateBaseTaskFactory.generateTask(CONTANT.GENERAL_TASK)
 );
@@ -46,9 +46,9 @@ const changeCollapseWidth = (width) => {
  */
 const changeCollapseHandle = (collapse) => {
   collapse
-    ? changeCollapseWidth("451px")
+    ? changeCollapseWidth("56%")
     : setTimeout(() => {
-        changeCollapseWidth("160px");
+        changeCollapseWidth("20%");
       }, 300);
 };
 

@@ -149,7 +149,7 @@ const isEmptyString = (str) => _.isEqual(str, "");
  */
 const keys = (val, collect = []) => {
   _.toPairs(val).forEach(([k, v]) => {
-    if (isObject(v)) keys(v, collect);
+    if (isPlainObject(v)) keys(v, collect);
     else collect.push(k);
   });
   return collect;

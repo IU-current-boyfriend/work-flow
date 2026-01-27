@@ -1,7 +1,7 @@
 import * as CONTANT from "./contant";
-import { getUUID, cloneDeep, isNil } from "./utils";
 import BaseTask from "./BaseTask";
 import BusinessException from "./BusinessException";
+import { getUUID, cloneDeep, isNil, keys } from "./utils";
 
 class CustomerTask extends BaseTask {
   // 常规属性
@@ -28,7 +28,7 @@ class CustomerTask extends BaseTask {
     // key == undefined || null
     if (isNil(key)) return;
     // key no exist
-    if (!Object.keys().includes(key)) return;
+    if (!keys(this.notation).includes(key)) return;
     // updated
     this.notation[key] = val;
   }

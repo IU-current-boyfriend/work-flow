@@ -1,4 +1,5 @@
-// 任务表单校验规则,全部字段
+import { isNil, isEmptyString } from "./utils";
+// 任务表单校验规则
 export const TASK_FORM_RULES = {
   approvalType: [
     {
@@ -77,5 +78,26 @@ export const TASK_FORM_RULES = {
   ],
   repulse: [
     { required: true, message: "repulse is required", trigger: "change" },
+  ],
+};
+
+// 审批执行器基础表单规则
+export const ACTUACTOR_FROM_RULES = {
+  // 事件类型
+  eventType: [
+    { required: true, message: "eventype is required", trigger: "change" },
+  ],
+  // 选择类
+  choseClass: [
+    { required: true, message: "class is required", trigger: "change" },
+  ],
+};
+
+// 审批执行器注入字段规则
+export const ACTUACTOR_FIELD_RULES = {
+  name: [{ required: true, message: "name is required", trigger: "blur" }],
+  type: [{ required: true, message: "type is required", trigger: "change" }],
+  express: [
+    { required: true, message: "express is required", trigger: "blur" },
   ],
 };

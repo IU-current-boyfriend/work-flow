@@ -9,7 +9,7 @@
 import { ref, inject } from "vue";
 
 // 定义外界监听器的属性集合
-const actuatorsProps = defineProps({
+const actuators = defineProps({
   actuator: {
     type: Object,
     default: () => ({}),

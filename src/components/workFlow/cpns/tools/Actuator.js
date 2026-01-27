@@ -1,5 +1,5 @@
 import BusinessException from "./BusinessException.js";
-import { arrayRemoveElement, cloneDeep } from "./utils.js";
+import { arrayRemoveElement, cloneDeep, keys } from "./utils.js";
 
 /**
  * 监听器数据实例对象
@@ -105,7 +105,7 @@ class Actuator {
    */
   setActuatorField(key, val) {
     // 非法的键名更新
-    if (!Object.keys(this.actuatorField).includes(key)) {
+    if (!keys(this.actuatorField).includes(key)) {
       BusinessException.invalidMonitorFieldKey(key);
     }
     // updated
@@ -121,7 +121,7 @@ class Actuator {
    */
   setActuator(key, val) {
     // 非法的键名更新
-    if (!Object.keys(this.actuator).includes(key)) {
+    if (!keys(this.actuator).includes(key)) {
       BusinessException.invalidMonitorKey(key);
     }
     // updated

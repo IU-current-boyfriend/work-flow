@@ -1,7 +1,8 @@
 import { h } from "vue";
+import { isNil } from "./utils";
 import * as CONTANT from "./contant";
 
-// 所有表单的配置项类型
+// 审批任务表单配置类
 export const TASK_FORM_ITEMS = [
   {
     name: "approvalType", // 审批类型
@@ -488,5 +489,83 @@ export const TASK_FORM_ITEMS = [
           ].map((item) => h(ElRadio, item))
         ),
     },
+  },
+];
+
+// 审批执行器基础表单配置类
+export const ACTUACTOR_FROM_ITEMS = [
+  {
+    name: "eventType",
+    type: "el-select",
+    label: "事件",
+    props: {
+      placeholder: "Please select",
+      options: [
+        {
+          value: "开始",
+          label: "开始",
+        },
+        {
+          value: "结束",
+          label: "结束",
+        },
+      ],
+    },
+  },
+  {
+    name: "choseClass",
+    type: "el-select",
+    label: "选择类",
+    props: {
+      placeholder: "Please select",
+      options: [
+        {
+          value: "addons\flowunitlibraryextendelementlistenerStartListener",
+          label: "开始监听器",
+        },
+        {
+          value: "addons\flowunitlibraryextendelementlistenerEndListener",
+          label: "结束监听器",
+        },
+      ],
+    },
+  },
+  {
+    name: "choseClass",
+    type: "el-input",
+    label: "类",
+    props: {
+      clearable: true,
+    },
+  },
+];
+
+// 审批执行器注入字段配置类
+export const ACTUACTOR_FIELD_ITEMS = [
+  {
+    name: "name",
+    type: "el-input",
+    label: "字段名称",
+  },
+  {
+    name: "type",
+    type: "el-select",
+    label: "字段类型",
+    props: {
+      placeholder: "Please select",
+      options: [
+        {
+          value: "字符串",
+          label: "字符串",
+        },
+      ],
+    },
+  },
+  {
+    name: "express",
+    type: "el-input",
+    label: "字段值",
+    // 字段类型不存在时隐藏
+    hidden: (type) => isNil(type),
   },
 ];

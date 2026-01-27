@@ -1,4 +1,4 @@
-import { cloneDeep } from "./utils";
+import { cloneDeep, keys } from "./utils";
 
 /**
  * 扩展属性数据对象
@@ -13,7 +13,7 @@ class Extension {
    * @returns 扩展实例对象
    */
   clear() {
-    Object.keys(this).forEach((k) => {
+    keys(this).forEach((k) => {
       const key = k.replace(/(\w)/, (m, $1) => $1.toUpperCase());
       if (key && typeof this[`set${key}`] === "function") {
         this[`set${key}`].call(this, undefined);

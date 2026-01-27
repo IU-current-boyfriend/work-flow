@@ -1,6 +1,6 @@
 import BaseTask from "./BaseTask";
 import * as CONTANT from "./contant";
-import { isNil, getUUID, cloneDeep } from "./utils";
+import { isNil, getUUID, cloneDeep, keys } from "./utils";
 
 /**
  * 普通的任务流程数据类
@@ -27,7 +27,7 @@ class NormalTask extends BaseTask {
     // key == undefined || null
     if (isNil(key)) return;
     // key no exist
-    if (!Object.keys().includes(key)) return;
+    if (!keys(this.notation).includes(key)) return;
     // updated
     this.notation[key] = val;
   }

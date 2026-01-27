@@ -1,10 +1,9 @@
 <template>
   <GeneralFormBuilder />
-  <el-button type="primary" @click="handle">111</el-button>
 </template>
 
 <script setup>
-import { ref, watch, computed, h, toRaw, onMounted } from "vue";
+import { ref, watch, computed, h, reactive } from "vue";
 import {
   isNil,
   keys,
@@ -51,24 +50,25 @@ const approvalTaskFormData = ref({
   // 打回流程
   repluse: "否",
 });
+
 // 定义表单的校验规则
 const approvalTaskFormRules = ref(TASK_FORM_RULES);
 
 // 重置垃圾状态
 const resetApprovalField = (names) => {
   if (isNil(names) || arrayIsEmpty(names)) return;
-  approvalTaskFormData.value = {
-    ...approvalTaskFormData.value,
-    ...names.map((name) => ({ [name]: undefined })),
-  };
+  // 重置表单字段
+  names.forEach((name) => (approvalTaskFormData.value[name] = undefined));
 };
 
-// 获取表单配置数据对象
-const acquireApprovalTaskFormItems = () => {
+/**
+ * 可由外界传递而来，也可以是异步的, 后端可以保存这个组件结构
+ */
+const acquireApprovalTaskFormItems = (formDeploys = null) => {
   // 返回计算属性的结果
   return computed(() => {
     // 组件部署
-    const deploys = TASK_FORM_ITEMS.reduce((r, c) => {
+    const deploys = formDeploys.reduce((r, c) => {
       const deploy = cloneDeep(c);
       // 处理表单组件的更新与显示,但未更新当前组件绑定的状态
       if (isFunction(deploy.hidden)) {
@@ -81,18 +81,23 @@ const acquireApprovalTaskFormItems = () => {
       r.push(deploy);
       return r;
     }, []);
-    // 不能在这里重置状态,思路不对
-
-    // 重置组件中某些垃圾状态
-    // resetApprovalField(
-    //   deploys.filter((deploy) => deploy.hidden).map((deploy) => deploy.name)
-    // );
+    // 获取需要重置的表单字段
+    const resetFields = keys(approvalTaskFormData.value).filter(
+      (v) =>
+        !deploys
+          .filter((deploy) => !deploy.hidden)
+          .map((deploy) => deploy.name)
+          .includes(v)
+    );
+    // 重置表单字段
+    resetApprovalField(resetFields);
+    // 返回组件结构
     return deploys;
   });
 };
 
 // 定义表单的配置对象
-const aprrovalTaskFormItems = acquireApprovalTaskFormItems();
+const aprrovalTaskFormItems = acquireApprovalTaskFormItems(TASK_FORM_ITEMS);
 
 // 初始化动态组件
 GeneralFormBuilder.value = useFormBuilder({
@@ -101,10 +106,6 @@ GeneralFormBuilder.value = useFormBuilder({
   modelValue: approvalTaskFormData,
   formLabelWidth: "120px",
 }).FormBuilder;
-
-const handle = () => {
-  console.log("al: =>", approvalTaskFormData.value);
-};
 </script>
 
 <style></style>
