@@ -12,7 +12,6 @@
           v-model:approval="approval"
           @update:changeCollapseHandle="changeCollapseHandle"
         />
-        <el-button type="primary" @click="hadelClick">点击</el-button>
       </el-aside>
     </el-container>
   </div>

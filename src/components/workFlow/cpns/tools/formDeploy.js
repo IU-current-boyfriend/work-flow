@@ -3,7 +3,7 @@ import { isNil } from "./utils";
 import * as CONTANT from "./contant";
 
 // 审批常规配置类
-export const ACTUACTOR_GENERAL_ITEMS = [
+export const APPROVAL_GENERAL_ITEMS = [
   {
     name: "id",
     type: "el-input",
@@ -601,7 +601,7 @@ export const ACTUACTOR_FIELD_ITEMS = [
 ];
 
 // 审批扩展属性字段配置类
-export const ACTUACTOR_EXTENSION_ITEMS = [
+export const APPROVAL_EXTENSION_ITEMS = [
   {
     name: "name",
     type: "el-input",
@@ -615,7 +615,7 @@ export const ACTUACTOR_EXTENSION_ITEMS = [
 ];
 
 // 审批抄送提醒字段配置类
-export const ACTUACTOR_NOTATION_ITEMS = [
+export const APPROVAL_NOTATION_ITEMS = [
   {
     name: "start",
     type: "el-cascader",
@@ -736,6 +736,18 @@ export const ACTUACTOR_NOTATION_ITEMS = [
           ],
         },
       ],
+    },
+  },
+];
+
+// 审批其它字段配置类
+export const APPROVAL_OTHER_ITEMS = [
+  {
+    name: "elementDocument",
+    type: "el-input",
+    label: "文档元素",
+    props: {
+      type: "textarea",
     },
   },
 ];

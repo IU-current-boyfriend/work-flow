@@ -1,5 +1,5 @@
 <template>
-  <div class="extensions-container">
+  <div class="approval-extensions">
     <el-table
       border
       show-overflow-tooltip
@@ -59,7 +59,7 @@ import {
 } from "./tools/utils";
 import { useFormBuilder } from "./tools/useFormBuilder";
 import { ACTUACTOR_EXTENSION_RULES } from "./tools/rules";
-import { ACTUACTOR_EXTENSION_ITEMS } from "./tools/formDeploy";
+import { APPROVAL_EXTENSION_ITEMS } from "./tools/formDeploy";
 import Extension from "./tools/Extension";
 import ExtensionModal from "./ExtensionModal.vue";
 
@@ -85,7 +85,7 @@ const ExtensionModalRef = useTemplateRef("ExtensionModalRef");
 // 创建扩展属性表单校验规则
 const extensionFormRules = ref(ACTUACTOR_EXTENSION_RULES);
 // 创建扩展属性表单结构
-const extensionFormItems = computed(() => ACTUACTOR_EXTENSION_ITEMS);
+const extensionFormItems = computed(() => APPROVAL_EXTENSION_ITEMS);
 
 // 创建动态表单的组件
 const useFormBuilderInstance = useFormBuilder({
@@ -194,7 +194,7 @@ const dialogSubmitEventHandle = () => {
 </script>
 
 <style scoped>
-.extensions-container {
+.approval-extensions {
   padding: 8px 16px;
 }
 .add-extension-btn .add-btn {
