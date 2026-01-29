@@ -25,9 +25,9 @@ class BaseTask {
   };
 
   // 执行监听器集合
-  actuators = null;
+  actuators = [];
   // 扩展属性集合
-  extensions = null;
+  extensions = [];
 
   // 其它
   other = {
@@ -42,11 +42,8 @@ class BaseTask {
     this.other.elementDocument = val;
   }
 
-  /**
-   * 清除其它元素中的元素文档
-   */
-  clearElementDocument() {
-    this.other.elementDocument = undefined;
+  getActuators() {
+    return this.actuators;
   }
 
   /**
@@ -71,41 +68,6 @@ class BaseTask {
     }
     // 返回实例对象
     return this;
-  }
-
-  /**
-   * 从扩展属性集合中移除扩展属性对象
-   * @param {*} index 索引值
-   */
-  removeExtension(index) {
-    // 如果集合为空或者不存在
-    if (isNil(this.extensions) || arrayIsEmpty(this.extensions)) {
-      // 无效的移除
-      BusinessException.invalidExtensionRemove();
-    }
-    // 处理索引越界的问题
-    if (isIndexOutOfBounds(this.extensions, index)) {
-      // 索引越界
-      BusinessException.isIndexOutOfBounds(index);
-    }
-    // 删除扩展属性
-    this.extensions = arrayRemoveElement(this.extensions, index);
-    // 返回实例对象
-    return this;
-  }
-
-  /**
-   * 根据索引从扩展属性集合中获取扩展属性对象
-   * @param {*} index 索引
-   * @returns extension instance
-   */
-  getExtensionByIndex(index) {
-    // 如果集合为空或者不存在
-    if (isNil(this.extensions) || arrayIsEmpty(this.extensions)) return null;
-    // 处理索引越界的问题
-    if (isIndexOutOfBounds(this.extensions, index)) return null;
-    // 返回对象extension instance实例对象
-    return this.extensions[index];
   }
 
   /**
@@ -134,60 +96,6 @@ class BaseTask {
   }
 
   /**
-   * 从监听器集合中移除监听器对象
-   * @param {*} index 索引值
-   */
-  removeActuator(index) {
-    // 如果集合为空或者不存在
-    if (isNil(this.actuators) || arrayIsEmpty(this.actuators)) {
-      // 无效的移除
-      BusinessException.invalidMonitorRemove();
-    }
-    // 处理索引越界的问题
-    if (isIndexOutOfBounds(this.actuators, index)) {
-      // 索引越界
-      BusinessException.isIndexOutOfBounds(index);
-    }
-    // 删除监听器
-    this.actuators = arrayRemoveElement(this.actuators, index);
-    // 返回实例对象
-    return this;
-  }
-
-  /**
-   * 获取常规对象属性值
-   * @param {*} key key存在获取属性值 key不存在获取常规对象本身
-   */
-  getGeneral(key) {
-    // key => undefined || null
-    if (isNil(key)) return cloneDeep(this.general);
-    // key => !undefined || !null
-    return cloneDeep(this.general[key]);
-  }
-
-  /**
-   * 根据索引从监听器集合中获取监听器对象
-   * @param {*} index 索引
-   * @returns Actuactor instance
-   */
-
-  getActuactorByIndex(index) {
-    // 如果集合为空或者不存在
-    if (isNil(this.actuators) || arrayIsEmpty(this.actuator)) return null;
-    // 处理索引越界的问题
-    if (isIndexOutOfBounds(this.actuators, index)) return null;
-    // 返回对象Actuactor instance实例对象
-    return this.actuators[index];
-  }
-
-  /**
-   * 获取监听器集合
-   */
-  getActuactors() {
-    return cloneDeep(this.actuators);
-  }
-
-  /**
    * 设置常规对象属性值
    * @param {*} key 属性键
    * @param {*} val 属性值
@@ -210,25 +118,9 @@ class BaseTask {
     );
   }
 
-  /**
-   * 初始化监听器集合
-   */
-  initActuactors() {
-    this.actuators = Array.of();
-  }
-
-  /**
-   * 初始化扩展属性集合
-   */
-  initExtension() {
-    this.extensions = Array.of();
-  }
-
   // 构造函数
   constructor() {
     this.initGeneral();
-    this.initActuactors();
-    this.initExtension();
   }
 }
 

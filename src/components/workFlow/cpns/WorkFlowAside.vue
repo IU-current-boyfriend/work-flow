@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import * as CONTANT from "./tools/contant";
 import WorkTask from "./WorkTask.vue";
 import WorkUserTask from "./WorkUserTask.vue";
@@ -25,13 +25,29 @@ import GenerateBaseTaskFactory from "./tools/GenerateBaseTaskFactory";
 // 自定义事件类型
 const emits = defineEmits(["update:clickTaskHandle"]);
 
-// 审批类型实例对象
-const approvalModelInstance = ref();
-
 const workTaskHandle = () => {
   const instance = GenerateBaseTaskFactory.generateTask(
     CONTANT.NORMAL_TASK_FACTORY
   );
+  instance
+    .addActuator()
+    .addActuator()
+    .addActuator()
+    .addExtension()
+    .addExtension()
+    .addExtension()
+    .actuators.forEach((a, i) => {
+      a.eventType = "自定义类型" + (i + 1);
+      a.choseClass = "选择类" + (i + 1);
+      a.clazz = "选择类" + (i + 1);
+      a.fields = undefined;
+    });
+
+  instance.extensions.forEach((extension, index) => {
+    extension.name = "自定义字段" + (index + 1);
+    extension.value = "自定义类型" + (index + 1);
+  });
+
   emits("update:clickTaskHandle", instance);
 };
 
@@ -39,6 +55,23 @@ const workUserTaskHandle = () => {
   const instance = GenerateBaseTaskFactory.generateTask(
     CONTANT.CUSTOMER_TASK_FACTORY
   );
+  instance
+    .addActuator()
+    .addActuator()
+    .addExtension()
+    .addExtension()
+    .actuators.forEach((a, i) => {
+      a.eventType = "自定义类型" + (i + 1);
+      a.choseClass = "选择类" + (i + 1);
+      a.clazz = "选择类" + (i + 1);
+      a.fields = undefined;
+    });
+
+  instance.extensions.forEach((extension, index) => {
+    extension.name = "自定义字段" + (index + 1);
+    extension.value = "自定义类型" + (index + 1);
+  });
+
   emits("update:clickTaskHandle", instance);
 };
 </script>

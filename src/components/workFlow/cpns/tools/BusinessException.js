@@ -16,21 +16,6 @@ class BusinessException {
   }
 
   /**
-   * 非法监听器注入字段属性
-   * @param {*} key 键名
-   */
-  static invalidMonitorFieldKey(key) {
-    throw new Error(`${CONTANT.INVALID_MONITOR_INJECT_FIELD}${key}`);
-  }
-
-  /**
-   * 无效的监听器移除
-   */
-  static invalidMonitorRemove() {
-    throw new Error(CONTANT.INVALID_MONITOR_REMOVE);
-  }
-
-  /**
    * 无效的扩展属性移除
    */
   static invalidExtensionRemove() {

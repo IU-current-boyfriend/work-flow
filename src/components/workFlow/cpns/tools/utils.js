@@ -164,10 +164,21 @@ const isFunction = (val) => {
   return _.isFunction(val);
 };
 
+/**
+ * 合并数组
+ * @param {*} array  被连接的数组
+ * @param  {...any} args 连接的值
+ * @returns 新的数据
+ */
+const concat = (array, ...args) => {
+  return _.concat(array, args);
+};
+
 export {
   keys,
   merge,
   isNil,
+  concat,
   forOwn,
   isArray,
   getUUID,

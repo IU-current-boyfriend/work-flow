@@ -10,7 +10,11 @@
     <!--  分割线 -->
     <el-divider />
     <!-- 注入字段 -->
-    <ApprovalActuatorField :fields="approvalActuator.fields" />
+    <ActuatorFields
+      :fields="approvalActuator.fields"
+      @deleteActuatorFieldHandle="deleteActuatorFieldHandle"
+      @addAprrovalFieldEventHandle="addAprrovalFieldEventHandle"
+    />
     <!-- 按钮 -->
     <div class="btn-groups">
       <el-row justify="space-between" :gutter="10">
@@ -18,7 +22,7 @@
           <el-button @click="closeDrawer">取消</el-button>
         </el-col>
         <el-col :span="12">
-          <el-button type="primary" @click="sumbitDrawerEventHandle"
+          <el-button type="primary" @click="saveActuatorEventHandle"
             >保存</el-button
           >
         </el-col>
@@ -29,19 +33,19 @@
 
 <script setup>
 import { ref, inject, computed, watch } from "vue";
-import { isNil } from "./tools/utils";
+import { isNil, keys, isArray, cloneDeep, concat } from "./tools/utils";
 import { ACTUACTOR_FROM_RULES } from "./tools/rules";
 import { ACTUACTOR_FROM_ITEMS } from "./tools/formDeploy";
 import { useFormBuilder } from "./tools/useFormBuilder";
-import AddActuatorModal from "./AddActuatorModal.vue";
-import ApprovalActuatorField from "./ApprovalActuatorField.vue";
+import ActuatorFields from "./ActuatorFields.vue";
 
 // 定义单体执行器props属性对象
 const defineActuator = defineProps({
   actuator: Object,
 });
 
-const emits = defineEmits(["closeDrawerEvent"]);
+// 定义自定义事件
+const emits = defineEmits(["saveActuatorEventHandle"]);
 
 const collapseWidth = inject("collapseWidth");
 
@@ -54,12 +58,7 @@ const setDrawer = (visiable) => {
 };
 
 // 创建监听器表单对象
-const approvalActuator = ref({
-  eventType: undefined, // 事件
-  choseClass: undefined, // 选择类
-  clazz: undefined, // 类
-  fields: null, // 字段集合
-});
+const approvalActuator = ref({});
 
 // 创建动态表单的校验规则
 const approvalActuatorFormRules = ref(ACTUACTOR_FROM_RULES);
@@ -99,9 +98,47 @@ const closeDrawer = () => setDrawer(false);
 // 处理关闭模态框事件
 const closeDrawerEventHandle = () => {
   useFormBuilderInstance.resetFields();
+  resetApprovalActuator();
 };
 // 处理保存模态框事件
-const sumbitDrawerEventHandle = () => {};
+const saveActuatorEventHandle = () => {
+  emits("saveActuatorEventHandle", cloneDeep(approvalActuator.value));
+  closeDrawer();
+  closeDrawerEventHandle();
+};
+
+// 增加字段方法
+const addAprrovalFieldEventHandle = (field) => {
+  const fields = approvalActuator.value.fields;
+  let serialNumber = -1;
+  if (!isNil(fields)) {
+    const exist = fields.some((f) => f.serialNumber === field.serialNumber);
+    if (exist) {
+      // 编辑操作
+      approvalActuator.value.fields = approvalActuator.value.fields.map((f) => {
+        if (f.serialNumber === field.serialNumber) return field;
+        return f;
+      });
+      return;
+    }
+  }
+  // 新增操作
+  serialNumber = isNil(fields) ? 1 : fields.length + 1;
+  approvalActuator.value.fields = concat(isNil(fields) ? [] : fields, {
+    ...field,
+    serialNumber,
+  });
+};
+
+/**
+ * 移除字段
+ */
+const deleteActuatorFieldHandle = (field) => {
+  // 移除字段
+  approvalActuator.value.fields = approvalActuator.value.fields.filter(
+    (f) => f.serialNumber !== field.serialNumber
+  );
+};
 
 // 监听单体监听器变化
 watch(

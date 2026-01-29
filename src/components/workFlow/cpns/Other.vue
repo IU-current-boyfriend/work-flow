@@ -1,10 +1,10 @@
-<template>Other</template>
+<template>
+  <div>other</div>
+</template>
 
 <script setup>
-const approvalParams = defineProps({
-  approval: {
-    type: Object,
-  },
+const defineOther = defineProps({
+  other: Object,
 });
 </script>
 

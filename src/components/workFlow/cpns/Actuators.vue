@@ -1,8 +1,9 @@
 <template>
-  <div class="actuators">
+  <div class="approval-acturators">
     <el-table
       border
-      :data="defineActuators.actuators"
+      show-overflow-tooltip
+      :data="acturatorsFormModel"
       :header-cell-style="{ color: '#333' }"
     >
       <el-table-column
@@ -30,107 +31,83 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class="add-actuator-btn">
-      <el-button type="primary" class="add-btn" @click="addActuatorHandle">
+    <div class="actuator-btn">
+      <el-button
+        type="primary"
+        class="add-btn"
+        @click="openActuatorDrawerHandle"
+      >
         <el-icon class="icon"><Plus /></el-icon>
         添加监听器</el-button
       >
     </div>
-    <AddActuatorModal ref="actuatorModalRef" :actuator="actuator" />
+    <ActuatorDrawer
+      ref="ActuatorDrawerRef"
+      :actuator="actuator"
+      @saveActuatorEventHandle="saveActuatorEventHandle"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, watch, computed, useTemplateRef } from "vue";
-import { isNil, cloneDeep, keys } from "./tools/utils";
-
+import { arrayIsEmpty, isNil, merge } from "./tools/utils";
+import Actuator from "./tools/Actuator";
+import ActuatorDrawer from "./ActuatorDrawer.vue";
 // 表单的表头设置
 const actuatorsTableProps = [
   { label: "序号", prop: "serialNumber" },
   { label: "事件类型", prop: "eventType" },
 ];
 
-// 定义执行器props属性对象
-const defineActuators = defineProps({
-  actuators: {
-    type: Array,
-    default: () => [
-      {
-        serialNumber: 1,
-        eventType: "自定义事件",
-        choseClass: "11233",
-        clazz: "11233",
-        fields: [
-          {
-            serialNumber: 1,
-            name: "自定义字段名",
-            type: "字符串",
-            express: "表达式",
-          },
-        ],
-      },
-    ],
-  },
-});
 // 创建单体监听器对象
 const actuator = ref({});
-// 创建监听器的集合状态对象
-const approvalActuators = ref([]);
-// 创建模态框实例对象
-const actuatorModalRef = useTemplateRef("actuatorModalRef");
-
-/**
- * 初始化监听器
- */
-const initApprovalActuators = (actuatorCollect = null) => {
-  const _actuators = isNil(actuatorCollect)
-    ? defineActuators.approvalActuators
-    : actuatorCollect;
-  // 设置监听器的集合状态对象
-  approvalActuators.value = cloneDeep(_actuators);
+const ActuatorDrawerRef = useTemplateRef("ActuatorDrawerRef");
+// 定义监听表单数据对象
+const acturatorsFormModel = defineModel("actuators");
+// 更新单体监听器对象
+const updateActautor = (_actuator) => {
+  if (isNil(_actuator)) return;
+  actuator.value = _actuator;
 };
 
-// 更新单体监听器状态
-const updateActuator = (newActuator) => {
-  if (isNil(newActuator)) return;
-  actuator.value = { ...newActuator };
-};
+// 打开执行器
+const openActuatorDrawerHandle = () => ActuatorDrawerRef.value.openDrawer();
 
-// 添加执行器
-const addActuatorHandle = () => {
-  actuatorModalRef.value.openDrawer();
+// 删除执行器
+const deleteActuatorHandle = (actuator) => {
+  acturatorsFormModel.value = acturatorsFormModel.value.filter(
+    (a) => a.serialNumber !== actuator.serialNumber
+  );
 };
 
 // 编辑执行器
-const editActuatorHandle = (row) => {
-  updateActuator(row);
-  actuatorModalRef.value.openDrawer();
+const editActuatorHandle = (_actuator) => {
+  updateActautor({ ..._actuator });
+  openActuatorDrawerHandle();
 };
-// 删除执行器
-const deleteActuatorHandle = (row) => {};
 
-// 初始化组件状态
-initApprovalActuators();
-
-// 监听执行器的变化
-watch(
-  () => defineActuators.actuators,
-  (approvalActuators) => {
-    initApprovalActuators(approvalActuators);
-  }
-);
+// 新增执行器
+const saveActuatorEventHandle = (_actuator) => {
+  if (isNil(_actuator)) return;
+  let serialNumber = -1;
+  serialNumber =
+    isNil(acturatorsFormModel.value) || arrayIsEmpty(acturatorsFormModel.value)
+      ? 0
+      : acturatorsFormModel.value.length + 1;
+  acturatorsFormModel.value.push(merge(new Actuator(serialNumber), _actuator));
+};
 </script>
 
 <style scoped>
-.actuators {
+.approval-acturators {
   padding: 8px 16px;
 }
-
-.add-actuator-btn .add-btn {
+.actuator-btn .add-btn {
   width: 100%;
   margin-top: 15px;
 }
-.add-actuator-btn .add-btn .icon {
+.actuator-btn .add-btn .icon {
   margin-right: 5px;
 }
 </style>

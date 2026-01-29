@@ -2,6 +2,36 @@ import { h } from "vue";
 import { isNil } from "./utils";
 import * as CONTANT from "./contant";
 
+// 审批常规配置类
+export const ACTUACTOR_GENERAL_ITEMS = [
+  {
+    name: "id",
+    type: "el-input",
+    label: "ID",
+    props: {
+      disabled: true,
+    },
+  },
+  {
+    name: "name",
+    type: "el-input",
+    label: "名称",
+    props: {
+      placeholder: "Please input",
+      clearable: true,
+    },
+  },
+  {
+    name: "mark",
+    type: "el-input",
+    label: "标签",
+    props: {
+      placeholder: "Please input",
+      clearable: true,
+    },
+  },
+];
+
 // 审批任务表单配置类
 export const TASK_FORM_ITEMS = [
   {
@@ -567,5 +597,145 @@ export const ACTUACTOR_FIELD_ITEMS = [
     label: "字段值",
     // 字段类型不存在时隐藏
     hidden: (type) => isNil(type),
+  },
+];
+
+// 审批扩展属性字段配置类
+export const ACTUACTOR_EXTENSION_ITEMS = [
+  {
+    name: "name",
+    type: "el-input",
+    label: "属性名",
+  },
+  {
+    name: "value",
+    type: "el-input",
+    label: "属性值",
+  },
+];
+
+// 审批抄送提醒字段配置类
+export const ACTUACTOR_NOTATION_ITEMS = [
+  {
+    name: "start",
+    type: "el-cascader",
+    label: "开始抄送",
+    props: {
+      style: { width: "100%" },
+      placeholder: "Please select",
+      props: { multiple: true }, // 可清除
+      clearable: true, // 多选
+      options: [
+        {
+          value: 1,
+          label: "Asia",
+          children: [
+            {
+              value: 2,
+              label: "China",
+              children: [
+                { value: 3, label: "Beijing" },
+                { value: 4, label: "Shanghai" },
+                { value: 5, label: "Hangzhou" },
+              ],
+            },
+            {
+              value: 6,
+              label: "Japan",
+              children: [
+                { value: 7, label: "Tokyo" },
+                { value: 8, label: "Osaka" },
+                { value: 9, label: "Kyoto" },
+              ],
+            },
+          ],
+        },
+        {
+          value: 14,
+          label: "Europe",
+          children: [
+            {
+              value: 15,
+              label: "France",
+              children: [
+                { value: 16, label: "Paris" },
+                { value: 17, label: "Marseille" },
+                { value: 18, label: "Lyon" },
+              ],
+            },
+            {
+              value: 19,
+              label: "UK",
+              children: [
+                { value: 20, label: "London" },
+                { value: 21, label: "Birmingham" },
+                { value: 22, label: "Manchester" },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    name: "end",
+    type: "el-cascader",
+    label: "结束抄送",
+    props: {
+      style: { width: "100%" },
+      placeholder: "Please select",
+      props: { multiple: true }, // 可清除
+      clearable: true, // 多选
+      options: [
+        {
+          value: 1,
+          label: "Asia",
+          children: [
+            {
+              value: 2,
+              label: "China",
+              children: [
+                { value: 3, label: "Beijing" },
+                { value: 4, label: "Shanghai" },
+                { value: 5, label: "Hangzhou" },
+              ],
+            },
+            {
+              value: 6,
+              label: "Japan",
+              children: [
+                { value: 7, label: "Tokyo" },
+                { value: 8, label: "Osaka" },
+                { value: 9, label: "Kyoto" },
+              ],
+            },
+          ],
+        },
+        {
+          value: 14,
+          label: "Europe",
+          children: [
+            {
+              value: 15,
+              label: "France",
+              children: [
+                { value: 16, label: "Paris" },
+                { value: 17, label: "Marseille" },
+                { value: 18, label: "Lyon" },
+              ],
+            },
+            {
+              value: 19,
+              label: "UK",
+              children: [
+                { value: 20, label: "London" },
+                { value: 21, label: "Birmingham" },
+                { value: 22, label: "Manchester" },
+              ],
+            },
+          ],
+        },
+      ],
+    },
   },
 ];

@@ -1,5 +1,6 @@
 import { isNil, isEmptyString } from "./utils";
-// 任务表单校验规则
+
+// 审批任务表单校验规则
 export const TASK_FORM_RULES = {
   approvalType: [
     {
@@ -100,4 +101,10 @@ export const ACTUACTOR_FIELD_RULES = {
   express: [
     { required: true, message: "express is required", trigger: "blur" },
   ],
+};
+
+// 审批扩展属性校验规则
+export const ACTUACTOR_EXTENSION_RULES = {
+  name: [{ required: true, message: "name is required", trigger: "blur" }],
+  value: [{ required: true, message: "value is required", trigger: "blur" }],
 };

@@ -14,8 +14,8 @@ class NormalTask extends BaseTask {
 
   // 抄送提醒
   notation = {
-    start: null, // 抄送开始的索引数组（树型结构）
-    end: null, // 抄送结束的索引数组（树型结构）
+    start: undefined, // 抄送开始的索引数组（树型结构）
+    end: undefined, // 抄送结束的索引数组（树型结构）
   };
 
   /**
@@ -30,18 +30,6 @@ class NormalTask extends BaseTask {
     if (!keys(this.notation).includes(key)) return;
     // updated
     this.notation[key] = val;
-  }
-
-  /**
-   * 获取抄送提醒信息
-   * @param {*} key 键名
-   * @returns value or undefined(NonExist property) or null(exist property)
-   */
-  getNotation(key) {
-    // key === null || undefined => get self
-    if (isNil(key)) return cloneDeep(this.notation);
-    // else return notation property
-    return cloneDeep(this.notation[key]);
   }
 
   initGeneral() {

@@ -9,17 +9,18 @@
       </el-main>
       <el-aside class="cell-aside-option" :width="collapseWidth">
         <WorkFlowOptionAside
-          :instance="propsInstance"
+          v-model:approval="approval"
           @update:changeCollapseHandle="changeCollapseHandle"
-          @update:approvalTask="updateApprovalTask"
         />
+        <el-button type="primary" @click="hadelClick">点击</el-button>
       </el-aside>
     </el-container>
   </div>
 </template>
 
 <script setup>
-import { provide, ref, watch, nextTick } from "vue";
+import { provide, ref } from "vue";
+import { arrayIsEmpty, isNil, forOwn, unionSort } from "./cpns/tools/utils";
 import * as CONTANT from "./cpns/tools/contant";
 import WorkFlowCell from "./cpns/WorkFlowCell.vue";
 import WorkFlowAside from "./cpns/WorkFlowAside.vue";
@@ -27,12 +28,49 @@ import WorkFlowOptionAside from "./cpns/WorkFlowOptionAside.vue";
 import GenerateBaseTaskFactory from "./cpns/tools/GenerateBaseTaskFactory";
 
 const collapseWidth = ref("20%");
-const propsInstance = ref(
-  GenerateBaseTaskFactory.generateTask(CONTANT.GENERAL_TASK)
-);
 
 // 提供给弹窗子组件弹窗使用
 provide("collapseWidth", collapseWidth);
+
+// 组件展示的顺序及icon配置映射
+const collapseConfigMap = [
+  { name: "General", icon: "InfoFilled" },
+  { name: "ApprovalTask", icon: "Checked" },
+  { name: "Actuators", icon: "BellFilled" },
+  { name: "Extensions", icon: "CirclePlusFilled" },
+  { name: "Notation", icon: "Promotion" },
+  { name: "Other", icon: "Paperclip" },
+];
+
+/**
+ * 创建审批的映射
+ */
+const createApproval = (_approval) => {
+  // 实例化组件键名排序
+  const keys = unionSort(
+    collapseConfigMap.map((v) => v.name),
+    forOwn(_approval)
+  );
+  if (!isNil(keys)) {
+    return keys.reduce((r, k) => {
+      const _t = {};
+      const icon = collapseConfigMap.find(
+        (item) => item.name.toLowerCase() === k.toLowerCase()
+      );
+      // 设置图标
+      if (!isNil(icon)) _t.icon = { ...icon };
+      // 设置值
+      _t.data = _approval[k];
+      r[k] = _t;
+      return r;
+    }, {});
+  }
+  return {};
+};
+
+const approval = ref(
+  createApproval(GenerateBaseTaskFactory.generateTask(CONTANT.GENERAL_TASK))
+);
 
 /**
  * 设置伸缩框宽度
@@ -52,17 +90,17 @@ const changeCollapseHandle = (collapse) => {
       }, 300);
 };
 
-const updateApprovalTask = (approvalTask) => {
-  console.log("可以绑定任务中的formData数据...");
+const clickTaskHandle = (_approval) => {
+  // 整体更新实例对象,业务需求
+  approval.value = createApproval(_approval);
+  // 设置伸缩框
+  console.log("approval: =>", approval.value);
+
+  changeCollapseHandle(false);
 };
 
-const clickTaskHandle = (instance) => {
-  // 整体更新实例对象,业务需求
-  propsInstance.value = instance;
-  // 设置伸缩框
-  changeCollapseHandle(false);
-
-  console.log("instance: =>", instance);
+const hadelClick = () => {
+  console.log("click: =>", approval.value);
 };
 </script>
 

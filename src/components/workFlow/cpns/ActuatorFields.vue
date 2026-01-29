@@ -47,22 +47,22 @@
       </el-table>
     </main>
   </div>
-  <AddActuatorFieldModal
-    ref="addActuatorFieldRef"
+  <ActuatorFieldModal
+    ref="ActuatorFieldRef"
     @dialogCloseEventHandle="dialogCloseEventHandle"
+    @dialogSubmitEventHandle="dialogSubmitEventHandle"
   >
     <ActuatorFieldFormBuilder />
-  </AddActuatorFieldModal>
+  </ActuatorFieldModal>
 </template>
 
 <script setup>
 import { ref, computed, useTemplateRef } from "vue";
-import { cloneDeep, isFunction, keys } from "./tools/utils";
+import { isNil, cloneDeep, isFunction, keys } from "./tools/utils";
 import { ACTUACTOR_FIELD_RULES } from "./tools/rules";
 import { ACTUACTOR_FIELD_ITEMS } from "./tools/formDeploy";
 import { useFormBuilder } from "./tools/useFormBuilder";
-import AddActuatorFieldModal from "./AddActuatorFieldModal.vue";
-import { isNil } from "lodash";
+import ActuatorFieldModal from "./ActuatorFieldModal.vue";
 // 定义属性值
 const defineFields = defineProps({
   fields: {
@@ -70,6 +70,11 @@ const defineFields = defineProps({
     default: [],
   },
 });
+// 自定义事件
+const emits = defineEmits([
+  "addAprrovalFieldEventHandle",
+  "deleteActuatorFieldHandle",
+]);
 
 // 定义注入字段的表单数据
 const actuatorField = ref({
@@ -79,7 +84,7 @@ const actuatorField = ref({
 });
 
 // 定义对话框的实例
-const addActuatorFieldRef = useTemplateRef("addActuatorFieldRef");
+const ActuatorFieldRef = useTemplateRef("ActuatorFieldRef");
 
 const acquireFieldFormItems = () => {
   return computed(() => {
@@ -137,19 +142,23 @@ const editActuatorFieldHandle = (row) => {
   // 更新注入字段对象值
   updateActuatorField(row);
   // 打开对话框
-  addActuatorFieldRef.value.openDialog();
+  ActuatorFieldRef.value.openDialog();
 };
 // 删除字段
 const deleteActuatorFieldHandle = (row) => {
-  console.log("删除字段:=>", row);
+  emits("deleteActuatorFieldHandle", { ...row });
 };
+
 const addActuatorFieldHandle = () => {
-  addActuatorFieldRef.value.openDialog();
+  ActuatorFieldRef.value.openDialog();
+};
+const dialogSubmitEventHandle = () => {
+  emits("addAprrovalFieldEventHandle", { ...actuatorField.value });
 };
 
 const dialogCloseEventHandle = () => {
-  resetActuatorField();
   useFormBuilderInstance.resetFields();
+  resetActuatorField();
 };
 </script>
 

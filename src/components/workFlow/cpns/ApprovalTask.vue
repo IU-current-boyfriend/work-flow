@@ -1,5 +1,7 @@
 <template>
-  <GeneralFormBuilder />
+  <div class="approval-task">
+    <ApprovalTaskFormBuilder />
+  </div>
 </template>
 
 <script setup>
@@ -16,96 +18,59 @@ import { TASK_FORM_ITEMS } from "./tools/formDeploy";
 import { TASK_FORM_RULES } from "./tools/rules";
 import * as CONTANT from "./tools/contant";
 
-// 定义props组件
-defineProps({ approval: Object });
-
-const emits = defineEmits(["update:approvalTask"]);
-
-// 创建动态组件
-const GeneralFormBuilder = ref();
-// 定义表单数据对象
-const approvalTaskFormData = ref({
-  // 审批类型
-  approvalType: CONTANT.JOB_MANUAL_APPROVAL,
-  // 审批人
-  approvalHuman: CONTANT.APPROVAL_NOMINATOR,
-  // 处理用户
-  handlePerson: undefined,
-  // 主管
-  approvalManager: undefined,
-  // 候选人
-  approvalCandidatePerson: undefined,
-  // 候选角色
-  approvalCandidateRole: undefined,
-  // 表单管理员
-  approvalFormAdmin: undefined,
-  // 表单角色
-  approvalFormRule: undefined,
-  // 审批方式
-  approvalMode: "或签",
-  // 审批人为空
-  nonApproval: "自动通过",
-  // 指定审批人
-  nonApprovalHuman: undefined,
-  // 打回流程
-  repluse: "否",
-});
-
-// 定义表单的校验规则
-const approvalTaskFormRules = ref(TASK_FORM_RULES);
-
 // 重置垃圾状态
 const resetApprovalField = (names) => {
   if (isNil(names) || arrayIsEmpty(names)) return;
   // 重置表单字段
-  names.forEach((name) => (approvalTaskFormData.value[name] = undefined));
+  names.forEach((name) => (approvalTaskFormModel.value[name] = undefined));
 };
-
-/**
- * 可由外界传递而来，也可以是异步的, 后端可以保存这个组件结构
- */
-const acquireApprovalTaskFormItems = (formDeploys = null) => {
-  // 返回计算属性的结果
-  return computed(() => {
-    // 组件部署
-    const deploys = formDeploys.reduce((r, c) => {
-      const deploy = cloneDeep(c);
-      // 处理表单组件的更新与显示,但未更新当前组件绑定的状态
-      if (isFunction(deploy.hidden)) {
-        deploy.hidden = deploy.hidden({
-          approvalType: approvalTaskFormData.value.approvalType,
-          approvalHuman: approvalTaskFormData.value.approvalHuman,
-          nonApproval: approvalTaskFormData.value.nonApproval,
-        });
-      }
-      r.push(deploy);
-      return r;
-    }, []);
-    // 获取需要重置的表单字段
-    const resetFields = keys(approvalTaskFormData.value).filter(
-      (v) =>
-        !deploys
-          .filter((deploy) => !deploy.hidden)
-          .map((deploy) => deploy.name)
-          .includes(v)
-    );
-    // 重置表单字段
-    resetApprovalField(resetFields);
-    // 返回组件结构
-    return deploys;
-  });
-};
-
+// 创建审批任务动态表单实例对象应用
+const ApprovalTaskFormBuilder = ref();
+// 定义审批任务表单数据
+const approvalTaskFormModel = defineModel("approvalTask");
+// 定义表单的校验规则
+const approvalTaskFormRules = ref(TASK_FORM_RULES);
+// 定义动态表单组件结构
 // 定义表单的配置对象
-const aprrovalTaskFormItems = acquireApprovalTaskFormItems(TASK_FORM_ITEMS);
+const aprrovalTaskFormItems = computed(() => {
+  // 组件部署
+  const deploys = TASK_FORM_ITEMS.reduce((r, c) => {
+    const deploy = cloneDeep(c);
+    // 处理表单组件的更新与显示,但未更新当前组件绑定的状态
+    if (isFunction(deploy.hidden)) {
+      deploy.hidden = deploy.hidden({
+        approvalType: approvalTaskFormModel.value.approvalType,
+        approvalHuman: approvalTaskFormModel.value.approvalHuman,
+        nonApproval: approvalTaskFormModel.value.nonApproval,
+      });
+    }
+    r.push(deploy);
+    return r;
+  }, []);
+  // 获取需要重置的表单字段
+  const resetFields = keys(approvalTaskFormModel.value).filter(
+    (v) =>
+      !deploys
+        .filter((deploy) => !deploy.hidden)
+        .map((deploy) => deploy.name)
+        .includes(v)
+  );
+  // 重置表单字段
+  resetApprovalField(resetFields);
+  // 返回组件结构
+  return deploys;
+});
 
-// 初始化动态组件
-GeneralFormBuilder.value = useFormBuilder({
+// 创建动态表单
+const useFormBuilderInstance = useFormBuilder({
   formItems: aprrovalTaskFormItems,
   formRules: approvalTaskFormRules,
-  modelValue: approvalTaskFormData,
+  modelValue: approvalTaskFormModel,
   formLabelWidth: "120px",
-}).FormBuilder;
+});
+
+// 动态表单组件应用赋值
+ApprovalTaskFormBuilder.value = useFormBuilderInstance.FormBuilder;
 </script>
 
 <style></style>
