@@ -1,5 +1,5 @@
 <template>
-  <div class="task-user-cell">用户任务</div>
+  <div class="task-user-cell" data-type="task-cell">用户任务</div>
 </template>
 
 <script setup></script>

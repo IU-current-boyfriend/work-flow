@@ -2,10 +2,10 @@
   <div class="work-flow-cell">
     <el-container class="cell-container">
       <el-aside class="cell-aside">
-        <WorkFlowAside @update:clickTaskHandle="clickTaskHandle" />
+        <WorkFlowAside @cellDragstartEvent="cellDragstartEventHandle" />
       </el-aside>
       <el-main class="cell-main">
-        <WorkFlowCell />
+        <WorkFlowCell ref="x6GraphInstanceRef" />
       </el-main>
       <el-aside class="cell-aside-option" :width="collapseWidth">
         <WorkFlowOptionAside
@@ -18,8 +18,14 @@
 </template>
 
 <script setup>
-import { provide, ref } from "vue";
-import { arrayIsEmpty, isNil, forOwn, unionSort } from "./cpns/tools/utils";
+import { nextTick, provide, ref, useTemplateRef, watch } from "vue";
+import {
+  arrayIsEmpty,
+  isNil,
+  forOwn,
+  unionSort,
+  throttle,
+} from "./cpns/tools/utils";
 import * as CONTANT from "./cpns/tools/contant";
 import WorkFlowCell from "./cpns/WorkFlowCell.vue";
 import WorkFlowAside from "./cpns/WorkFlowAside.vue";
@@ -27,6 +33,13 @@ import WorkFlowOptionAside from "./cpns/WorkFlowOptionAside.vue";
 import GenerateBaseTaskFactory from "./cpns/tools/GenerateBaseTaskFactory";
 
 const collapseWidth = ref("20%");
+
+// 定义画布对象
+const x6GraphInstance = ref(null);
+// 定义画布插件dnd实例对象
+const x6GraphDndInstance = ref(null);
+// 定义画布插件组件实例对象
+const x6GraphInstanceRef = useTemplateRef("x6GraphInstanceRef");
 
 // 提供给弹窗子组件弹窗使用
 provide("collapseWidth", collapseWidth);
@@ -89,17 +102,47 @@ const changeCollapseHandle = (collapse) => {
       }, 300);
 };
 
-const clickTaskHandle = (_approval) => {
-  // 整体更新实例对象,业务需求
-  approval.value = createApproval(_approval);
-  // 设置伸缩框
-  console.log("approval: =>", approval.value);
-
-  changeCollapseHandle(false);
+/**
+ * 创建拖拽后的节点
+ */
+const createGraphNode = (e, callback) => {
+  const node = x6GraphInstance.value.createNode({
+    data: {
+      dragendFn: callback,
+    },
+    width: 120,
+    height: 100,
+    attrs: {
+      body: {
+        stroke: "#787be8",
+        strokeWidth: 1,
+        fill: "#fff",
+        rx: 6,
+        ry: 6,
+      },
+    },
+  });
+  // 开启拖拽插件
+  x6GraphDndInstance.value.start(node, e);
 };
 
-const hadelClick = () => {
-  console.log("click: =>", approval.value);
+/**
+ * 初始化相关画布的实例对象
+ */
+const initGraphInstances = () => {
+  x6GraphInstance.value = x6GraphInstanceRef.value.x6GraphInstance;
+  x6GraphDndInstance.value = x6GraphInstanceRef.value.x6GraphDndInstance;
+};
+
+/**
+ * 鼠标按下事件
+ */
+const cellDragstartEventHandle = (e, _approval) => {
+  initGraphInstances();
+  createGraphNode(e, () => {
+    changeCollapseHandle(false);
+    approval.value = createApproval(_approval);
+  });
 };
 </script>
 

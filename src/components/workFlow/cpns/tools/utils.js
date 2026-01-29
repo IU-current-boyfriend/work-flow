@@ -174,6 +174,16 @@ const concat = (array, ...args) => {
   return _.concat(array, args);
 };
 
+/**
+ * 截流函数
+ * @param {*} func
+ * @param {*} delay
+ * @returns
+ */
+const throttle = (func, delay) => {
+  return _.throttle(func, delay);
+};
+
 export {
   keys,
   merge,
@@ -182,6 +192,7 @@ export {
   forOwn,
   isArray,
   getUUID,
+  throttle,
   cloneDeep,
   unionSort,
   isFunction,

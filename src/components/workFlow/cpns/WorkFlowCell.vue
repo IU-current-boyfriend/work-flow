@@ -8,11 +8,13 @@
 
 <script setup>
 import { ref, onMounted, inject, watch, watchEffect, nextTick } from "vue";
-import { Graph } from "@antv/x6";
-import { merge } from "./tools/utils";
+import { Graph, Dnd } from "@antv/x6";
+import { merge, isFunction, isNil } from "./tools/utils";
 
 // ✅ 变量命名优化：语义清晰，避免混淆
 const x6GraphInstance = ref(null); // 存储X6的画布实例对象
+// 定义Dnd实例对象
+const x6GraphDndInstance = ref(null);
 const graphDomRef = ref(null); // 存储画布的DOM容器ref
 const graphOption = ref({}); // 画布最终合并后的配置项，初始值为空对象
 const isUpdating = ref(false); // 防重复更新锁：避免并发调用导致实例堆积
@@ -105,6 +107,17 @@ const createGraph = () => {
   const finalOption = initContainerEl(graphOption.value);
   // 创建新的x6实例
   x6GraphInstance.value = new Graph(finalOption);
+  // 创建新的x6插件dnd实例
+  x6GraphDndInstance.value = new Dnd({
+    target: x6GraphInstance.value,
+    getDragNode: (node) => node.clone({ keepId: true }),
+    getDropNode: (node) => node.clone({ keepId: true }),
+    validateNode: (node) => {
+      if (!isNil(node.data.dragendFn) && isFunction(node.data.dragendFn))
+        node.data.dragendFn();
+      return true;
+    },
+  });
 };
 
 // 初始化容器
@@ -151,6 +164,7 @@ watch(graphCanvasProps.graphInstanceProps, (newVal) => {
 // 暴露x6实例
 defineExpose({
   x6GraphInstance,
+  x6GraphDndInstance,
 });
 </script>
 
